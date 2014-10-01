@@ -13,6 +13,6 @@ public final class TestSub {
 			new JedisPool("localhost", 6380)
 		};
 		
-		PubSubs.sub(EchoSubscriber.INSTANCE, "echo", pools);
+		PubSubs.bulkSub(EchoSubscriber.INSTANCE, "echo", pools);
 	}
 }

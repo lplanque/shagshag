@@ -21,6 +21,33 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.3.2</version>
+				<executions>
+					<execution>
+						<id>subscribe</id>
+						<configuration>
+							<executable>java</executable>
+							<arguments>
+								<classpath />
+								<argument>com.lplanque.pubsub.sub.TestSub</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>publish</id>
+						<configuration>
+							<executable>java</executable>
+							<arguments>
+								<classpath />
+								<argument>com.lplanque.pubsub.pub.TestPub</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
