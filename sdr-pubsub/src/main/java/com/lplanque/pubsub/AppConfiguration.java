@@ -12,7 +12,7 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import com.lplanque.pubsub.pub.StringRedisPublisher;
-import com.lplanque.pubsub.sub.SimpleRedisSubscriber;
+import com.lplanque.pubsub.sub.EchoRedisSubscriber;
 
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -65,7 +65,7 @@ public class AppConfiguration {
 
 	@Bean(name="adapter")
     public MessageListenerAdapter messageListenerAdapter() {
-		return new MessageListenerAdapter(new SimpleRedisSubscriber());
+		return new MessageListenerAdapter(new EchoRedisSubscriber());
     }
 	
 	@Bean(name="container")
