@@ -41,10 +41,4 @@ public final class PubSubs {
 		assertNotNull(meth, ps, ch, pools);
 		bulk(j -> j.subscribe(ps, ch), pools);
 	}
-	
-	public static void ohe(final String ch, final JedisPool... pools) { // TODO refactor
-		final String meth = "ohe(String, JedisPool...)";
-		assertNotNull(meth, ch, pools);
-		bulk(j -> j.publish(ch, String.format("ohé %s", j)), pools);
-	}
 }
