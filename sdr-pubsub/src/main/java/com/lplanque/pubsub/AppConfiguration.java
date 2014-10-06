@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -18,25 +19,47 @@ import redis.clients.jedis.JedisPoolConfig;
 @Configuration
 public final class AppConfiguration {
 
-	// Just for test...
-	@Bean public RedisConnectionFactory getConnectionFactory() {
+	// Configuration methods
+	private String topic() {
+		return "echo";
+	}
+	
+	private String host() {
+		return "localhost";
+	}
+	
+	private String pwd() {
+		return "";
+	}
+	
+	private int port() {
+		return 6379;
+	}
+	
+	// Simple factory...
+	@Bean public RedisConnectionFactory connectionFactory() {
 		final JedisPoolConfig config = new JedisPoolConfig();
         final JedisConnectionFactory factory = new JedisConnectionFactory(config);
-        factory.setHostName("localhost");
-        factory.setPort(6379);
-        factory.setPassword("");
+        factory.setHostName(host());
+        factory.setPassword(pwd());
+        factory.setPort(port());
         return factory;
  
     }
 	
-	@Bean(name = "redisTemplate")
-	public <V> RedisTemplate<String,V> getRedisTemplate() {
+	@Bean(name="redisTemplate")
+	public <V> RedisTemplate<String,V> redisTemplate() {
 		final RedisTemplate<String,V> template =  new RedisTemplate<>();
-	    template.setConnectionFactory(getConnectionFactory());
+	    template.setConnectionFactory(connectionFactory());
 	    template.setKeySerializer(new StringRedisSerializer());
 	    return template;
 	}
 	
+	@Bean
+    ChannelTopic channelTopic() {
+        return new ChannelTopic(topic());
+    }
+
 	@Bean
     public MessageListenerAdapter messageListenerAdapter() {
 		return new MessageListenerAdapter(new SimpleRedisSubscriber());
