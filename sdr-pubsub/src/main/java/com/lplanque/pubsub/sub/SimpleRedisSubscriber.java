@@ -10,6 +10,6 @@ public class SimpleRedisSubscriber implements MessageListener {
 
 	@Override
 	public void onMessage(Message msg, byte[] pattern) {
-		out.println(format("Message received from %s: %s", msg.getChannel(), msg));
+		out.println(format("Message received from %s: %s", msg.getChannel(), msg.toString()));
 	}
 }

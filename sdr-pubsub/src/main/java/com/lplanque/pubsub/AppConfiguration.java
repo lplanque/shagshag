@@ -7,9 +7,11 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+import com.lplanque.pubsub.pub.StringRedisPublisher;
 import com.lplanque.pubsub.sub.SimpleRedisSubscriber;
 
 import redis.clients.jedis.JedisPoolConfig;
@@ -17,7 +19,7 @@ import redis.clients.jedis.JedisPoolConfig;
 //TODO AppConfiguration.class.getPackage().getName() instead ?
 @ComponentScan("com.lplanque.pubsub")
 @Configuration
-public final class AppConfiguration {
+public class AppConfiguration {
 
 	// Configuration methods
 	private String topic() {
@@ -37,7 +39,8 @@ public final class AppConfiguration {
 	}
 	
 	// Simple factory...
-	@Bean public RedisConnectionFactory connectionFactory() {
+	@Bean(name="factory")
+	public RedisConnectionFactory connectionFactory() {
 		final JedisPoolConfig config = new JedisPoolConfig();
         final JedisConnectionFactory factory = new JedisConnectionFactory(config);
         factory.setHostName(host());
@@ -47,21 +50,34 @@ public final class AppConfiguration {
  
     }
 	
-	@Bean(name="redisTemplate")
-	public <V> RedisTemplate<String,V> redisTemplate() {
-		final RedisTemplate<String,V> template =  new RedisTemplate<>();
+	@Bean(name="template")
+	public <V> RedisTemplate<String, V> redisTemplate() {
+		final RedisTemplate<String, V> template =  new RedisTemplate<>();
 	    template.setConnectionFactory(connectionFactory());
 	    template.setKeySerializer(new StringRedisSerializer());
 	    return template;
 	}
 	
-	@Bean
+	@Bean(name="topic")
     ChannelTopic channelTopic() {
         return new ChannelTopic(topic());
     }
 
-	@Bean
+	@Bean(name="adapter")
     public MessageListenerAdapter messageListenerAdapter() {
 		return new MessageListenerAdapter(new SimpleRedisSubscriber());
     }
+	
+	@Bean(name="container")
+    RedisMessageListenerContainer redisMessageListenerContainer() {
+        final RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory());
+        container.addMessageListener(messageListenerAdapter(), channelTopic());
+        return container;
+    }
+	
+	@Bean(name="publisher")
+	public StringRedisPublisher simpleRedisPublisher() {
+		return new StringRedisPublisher();
+	}
 }
