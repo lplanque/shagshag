@@ -52,7 +52,7 @@ public class AppConfiguration {
 	
 	@Bean(name="template")
 	public <V> RedisTemplate<String, V> redisTemplate() {
-		final RedisTemplate<String, V> template =  new RedisTemplate<>();
+		final RedisTemplate<String, V> template = new RedisTemplate<>();
 	    template.setConnectionFactory(connectionFactory());
 	    template.setKeySerializer(new StringRedisSerializer());
 	    return template;
@@ -77,7 +77,7 @@ public class AppConfiguration {
     }
 	
 	@Bean(name="publisher")
-	public StringRedisPublisher simpleRedisPublisher() {
+	public StringRedisPublisher stringRedisPublisher() {
 		return new StringRedisPublisher();
 	}
 }

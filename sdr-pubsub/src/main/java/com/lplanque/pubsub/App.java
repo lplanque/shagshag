@@ -13,7 +13,8 @@ public final class App {
 	}
 
 	public static void main(String[] args) {
-		
+
+		@SuppressWarnings("resource")
 		final ApplicationContext context = new AnnotationConfigApplicationContext(AppConfiguration.class);
 		final StringRedisPublisher publisher = context.getBean(StringRedisPublisher.class);
 		final RedisMessageListenerContainer container = context.getBean(RedisMessageListenerContainer.class);
