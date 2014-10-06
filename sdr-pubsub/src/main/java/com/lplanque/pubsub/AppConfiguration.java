@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -25,10 +26,11 @@ public final class AppConfiguration {
  
     }
 	
-    @Bean(name="redisTemplate")
-    public RedisTemplate<String, Object> getStringRedisTemplate() {
-    	final RedisTemplate<String, Object> template = new RedisTemplate<>();
-    	template.setConnectionFactory(getConnectionFactory());
-    	return template;
-    }
+	@Bean(name = "redisTemplate")
+	public <V> RedisTemplate<String,V> getRedisTemplate() {
+		final RedisTemplate<String,V> template =  new RedisTemplate<>();
+	    template.setConnectionFactory(getConnectionFactory());
+	    template.setKeySerializer(new StringRedisSerializer());
+	    return template;
+	}
 }
