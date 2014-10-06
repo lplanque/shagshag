@@ -6,7 +6,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import com.lplanque.pubsub.sub.SimpleRedisSubscriber;
 
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -33,4 +36,9 @@ public final class AppConfiguration {
 	    template.setKeySerializer(new StringRedisSerializer());
 	    return template;
 	}
+	
+	@Bean
+    public MessageListenerAdapter messageListenerAdapter() {
+		return new MessageListenerAdapter(new SimpleRedisSubscriber());
+    }
 }
