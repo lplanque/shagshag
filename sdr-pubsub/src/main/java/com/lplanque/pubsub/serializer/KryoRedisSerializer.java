@@ -18,22 +18,24 @@ public final class KryoRedisSerializer<T> implements RedisSerializer<T> {
 	
 	public KryoRedisSerializer(Class<T> clazz) {
 		this.clazz = clazz;
-		synchronized(KRYO) { // TODO Check !
+		synchronized(KRYO) {
 			KRYO.register(clazz);
 		}
 	}
 	
 	@Override public byte[] serialize(T in) throws SerializationException {
-		final ByteArrayOutputStream res = new ByteArrayOutputStream();
-		final Output output = new Output(new ByteArrayOutputStream());
+		final ByteArrayOutputStream os = new ByteArrayOutputStream();
+		final Output output = new Output(os);
 		KRYO.writeObject(output, in);
+		final byte[] res = output.toBytes();
 		output.close();
-		return res.toByteArray();
+		return res;
 	}
 
 	@Override
 	public T deserialize(byte[] out) throws SerializationException {
-		final Input input = new Input(new ByteArrayInputStream(out));
+		final ByteArrayInputStream is = new ByteArrayInputStream(out);
+		final Input input = new Input(is);
 		final T res = KRYO.readObject(input, clazz);
 		input.close();
 		return res;
