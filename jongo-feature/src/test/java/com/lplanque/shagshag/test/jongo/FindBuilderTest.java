@@ -43,9 +43,6 @@ public class FindBuilderTest {
 			Find find = fb.toFind(docs);
 			MongoCursor<Order> orders = find.as(Order.class);
 			for(Order order: orders) {
-				System.out.println("expected  = " + order(ni));
-				System.out.println("effective = " + order);
-				System.out.println();
 				assertEquals(order(ni), order);
 			}
 		}
