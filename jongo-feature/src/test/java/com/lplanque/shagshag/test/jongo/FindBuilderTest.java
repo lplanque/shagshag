@@ -38,11 +38,11 @@ public class FindBuilderTest extends CommonTest {
 		}
 	}
 	
-	// ALL TESTS !
-	// -----------
+	// TESTS
+	// -----
 	
 	@Override
-	public void go() {
+	public void go(/* SEQUENCE OF TESTS */) {
 		create(/* Check query just after new instance  */);
 		idempotence(/* check idempotence of close method (non-exhaustive) */);
 	}

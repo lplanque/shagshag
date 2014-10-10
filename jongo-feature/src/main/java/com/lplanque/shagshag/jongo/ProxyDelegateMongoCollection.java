@@ -1,7 +1,6 @@
 package com.lplanque.shagshag.jongo;
 
 import org.bson.types.ObjectId;
-
 import org.jongo.Aggregate;
 import org.jongo.Distinct;
 import org.jongo.Find;
@@ -22,7 +21,7 @@ import com.mongodb.WriteResult;
  * @author <a href="https://github.com/lplanque" target="_blank">Laurent Planque</a>
  */
 public final class ProxyDelegateMongoCollection extends MongoCollection {
-
+	
 	private final MongoCollection source;
 	
 	private JongoAction<Object> preInsert;
@@ -37,7 +36,7 @@ public final class ProxyDelegateMongoCollection extends MongoCollection {
 	 * @param source Non-null instance of {@link MongoCollection}.
 	 */
 	public ProxyDelegateMongoCollection(MongoCollection source) {
-		super(null, null);
+		super(source.getDBCollection(), null);
 		this.source = source;
 	}
 	
