@@ -21,7 +21,7 @@ import com.mongodb.WriteResult;
  * methods on the targeted collection.
  * @author <a href="https://github.com/lplanque" target="_blank">Laurent Planque</a>
  */
-public final class ProxyDelegateMongoCollection {
+public final class ProxyDelegateMongoCollection extends MongoCollection {
 
 	private final MongoCollection source;
 	
@@ -37,6 +37,7 @@ public final class ProxyDelegateMongoCollection {
 	 * @param source Non-null instance of {@link MongoCollection}.
 	 */
 	public ProxyDelegateMongoCollection(MongoCollection source) {
+		super(null, null);
 		this.source = source;
 	}
 	

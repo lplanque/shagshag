@@ -13,8 +13,8 @@ import org.jongo.MongoCollection;
 public final class FindBuilder implements AutoCloseable {
 	
 	private boolean closed;
-	private final StringBuilder query;
-	private final List<Object> acc;
+	private final StringBuilder query; 
+	private final List<Object> acc; 
 	
 	/**
 	 * TODO Explain ! :)
@@ -41,13 +41,14 @@ public final class FindBuilder implements AutoCloseable {
 	}
 
 	public Find toFind(MongoCollection mc) {
-		// Get the last char
-		final int last = query.length() - 1;
-		// Check if last char is not ','
-		if(query.charAt(last) == ',') {
-			query.deleteCharAt(last);
-		}
-		// Close all the time
+		close();
+		// Return the 'Find' object
+		return mc != null
+			? mc.find(query.toString(), acc.toArray())
+			: null;
+	}
+	
+	public Find toFind(ProxyDelegateMongoCollection mc) {
 		close();
 		// Return the 'Find' object
 		return mc != null
@@ -73,6 +74,13 @@ public final class FindBuilder implements AutoCloseable {
 			: close(new StringBuilder(query));
 	}
 	
+	/*
+	 * Size of 'acc', i.e. number of current parameters for the query template.
+	 */
+	public int parametersArity() {
+		return acc.size();
+	}
+	
 	// OVERRIDES
 	// ---------
 	
@@ -82,24 +90,18 @@ public final class FindBuilder implements AutoCloseable {
 	 * or '@link {@link #toFind(MongoCollection)}. This method is idempotent.
 	 */
 	@Override public void close() {
-		close(query);
-		closed = true;
+		if(!closed) {
+			close(query);
+			closed = true;
+		}
 	}
 
 	// INNER METHODS
 	// -------------
 	
-	/*
-	 * Check is builder is not closed.
-	 * If it is, then an IllegalStateException is thrown.
+	/* 
+	 * Close the string query template.
 	 */
-	private void notClosed() {
-		if(closed) {
-			throw new IllegalStateException("Builder is closed ! :p");
-		}
-	}
-	
-	// Close the string query template
 	private String close(StringBuilder sb) {
 		// Get the last char
 		final int last = sb.length() - 1;
@@ -109,5 +111,15 @@ public final class FindBuilder implements AutoCloseable {
 		}
 		sb.append('}');
 		return sb.toString();
+	}
+	
+	/*
+	 * Check is builder is not closed.
+	 * If it is, then an IllegalStateException is thrown.
+	 */
+	private void notClosed() {
+		if(closed) {
+			throw new IllegalStateException("Builder is closed ! :p");
+		}
 	}
 }

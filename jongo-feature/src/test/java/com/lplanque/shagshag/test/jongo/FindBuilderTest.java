@@ -3,38 +3,13 @@ package com.lplanque.shagshag.test.jongo;
 import static com.lplanque.shagshag.test.model.Models.*;
 import static org.junit.Assert.*;
 
-import java.util.Collection;
-
 import org.jongo.Find;
-import org.jongo.Jongo;
-import org.jongo.MongoCollection;
 import org.jongo.MongoCursor;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
 
-import com.github.fakemongo.junit.FongoRule;
 import com.lplanque.shagshag.jongo.FindBuilder;
 import com.lplanque.shagshag.test.model.Order;
 
-public class FindBuilderTest {
-	
-	@Rule
-	public FongoRule rule = new FongoRule();
-
-	private MongoCollection docs;
-	
-	private final int no = 10; // Number of orders
-	private final int ni = 10; // Number of items
-	
-	@Before public void init(/* Create the Jongo instance */) {
-		final Jongo jongo = new Jongo(rule.getDB(), JACKSON_MAPPER);
-		final Collection<Order> orders = orders(no, ni);
-		docs = jongo.getCollection("doc");
-		for(Order order: orders) {
-			docs.save(order);
-		}
-	}
+public class FindBuilderTest extends CommonTest {
 	
 	private void create(/* Check query just after new instance */) {
 		try(final FindBuilder fb = new FindBuilder()) {
@@ -48,11 +23,27 @@ public class FindBuilderTest {
 		}
 	}
 	
+	private void idempotence(/* check idempotence of close method (non-exhaustive) */) {
+		try(final FindBuilder fb = new FindBuilder()) {
+			// First close
+			fb.close();
+			final String template = fb.queryTemplate();
+			final int arity = fb.parametersArity();
+			assertTrue(fb.isClosed());
+			// One more time !
+			fb.close();
+			assertTrue(fb.isClosed());
+			assertEquals(template, fb.queryTemplate());
+			assertEquals(arity, fb.parametersArity());
+		}
+	}
+	
 	// ALL TESTS !
 	// -----------
 	
-	@Test
+	@Override
 	public void go() {
-		create(/* Check query just after new instance */);
+		create(/* Check query just after new instance  */);
+		idempotence(/* check idempotence of close method (non-exhaustive) */);
 	}
 }
