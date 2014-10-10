@@ -48,14 +48,6 @@ public final class FindBuilder implements AutoCloseable {
 			: null;
 	}
 	
-	public Find toFind(ProxyDelegateMongoCollection mc) {
-		close();
-		// Return the 'Find' object
-		return mc != null
-			? mc.find(query.toString(), acc.toArray())
-			: null;
-	}
-	
 	/**
 	 * Checks if builder is closed.
 	 * @return <code>true</code> if and only if the builder is closed.

@@ -20,13 +20,13 @@ public abstract class CommonTest {
 	public FongoRule rule = new FongoRule();
 	
 	protected MongoCollection docs;
-	protected int no = 10; // Number of orders
-	protected int ni = 10; // Number of items
+	protected int norders = 10; // Number of orders
+	protected int nitems  = 10; // Number of items
 	
 	@Before 
 	public void init(/* Create the Jongo instance */) {
 		final Jongo jongo = new Jongo(rule.getDB(), JACKSON_MAPPER);
-		final Collection<Order> orders = orders(no, ni);
+		final Collection<Order> orders = orders(norders, nitems);
 		docs = jongo.getCollection(getClass().getSimpleName());
 		for(Order order: orders) {
 			docs.save(order);

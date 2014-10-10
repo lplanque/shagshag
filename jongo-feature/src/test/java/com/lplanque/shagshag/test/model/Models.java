@@ -16,6 +16,8 @@ import com.fasterxml.jackson.datatype.joda.JodaModule;
 public final class Models {
 
 	public static final DateTime DATE = new DateTime();
+	public static final String DESCRIPTION = "price = quantity";
+	public static final String INFO_FORMAT = "%d items";
 	
 	public static final Mapper JACKSON_MAPPER = new JacksonMapper.Builder()
 		.registerModule(new JodaModule())
@@ -30,7 +32,7 @@ public final class Models {
 		final Item item = new Item();
 		item.quantity = q;
 		item.price = q;
-		item.description = "item with price equal to quantity";
+		item.description = DESCRIPTION;
 		return item;
 	}
 	
@@ -45,7 +47,7 @@ public final class Models {
 	public static Order order(final int n) {
 		final Order order = new Order();
 		order.date = DATE;
-		order.customerInfo = format("redundant order with %d items", n);
+		order.customerInfo = format(INFO_FORMAT, n);
 		order.items = items(n);
 		return order;
 	}
