@@ -3,8 +3,6 @@ package com.lplanque.shagshag.test.jongo;
 import static com.lplanque.shagshag.test.model.Models.*;
 import static org.junit.Assert.*;
 
-import java.util.Random;
-
 import org.jongo.Find;
 import org.jongo.MongoCursor;
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jongo.Find;
+import org.jongo.FindOne;
 import org.jongo.MongoCollection;
 
 /**
@@ -40,12 +41,30 @@ public final class FindBuilder implements AutoCloseable {
 		return this;
 	}
 
+	/**
+	 * Get a {@link Find} instance for the present query.
+	 * @param mc The {@link MongoCollection} to query.
+	 * @return A <code>Find</code> object for the query.
+	 */
 	public Find toFind(MongoCollection mc) {
 		close();
 		// Return the 'Find' object
 		return mc != null
 			? mc.find(query.toString(), acc.toArray())
 			: null;
+	}
+	
+	/**
+	 * Get a {@link FindOne} instance for the present query.
+	 * @param mc The {@link MongoCollection} to query.
+	 * @return A <code>FindOne</code> object for the query.
+	 */
+	public FindOne toFindOne(MongoCollection mc) {
+		close();
+		// Return the 'Find' object
+		return mc != null
+			? mc.findOne(query.toString(), acc.toArray())
+			: null;		
 	}
 	
 	/**
